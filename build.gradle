@@ -19,6 +19,12 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
+    implementation group: 'org.apache.lucene', name: 'lucene-core', version: '8.8.2'
+    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-highlighter
+    implementation group: 'org.apache.lucene', name: 'lucene-highlighter', version: '8.8.2'
+    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common
+    implementation group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: '8.8.2'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'

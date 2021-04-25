@@ -1,4 +1,4 @@
-import time
+#!/usr/bin/env python3
 
 import requests
 from bs4 import BeautifulSoup
@@ -37,5 +37,5 @@ for div in divs:
     }
     documents.append(document)
 
-with open("./data.json", "w") as f:
+with open("data.json", "w") as f:
     json.dump(documents, f)

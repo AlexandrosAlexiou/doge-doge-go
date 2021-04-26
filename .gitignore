@@ -1,8 +1,11 @@
 # IDEA
 ./idea
 
-#MacOS
+# MacOS
 .DS_Store
+
+# Data
+data.json
 
 HELP.md
 .gradle

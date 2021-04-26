@@ -37,5 +37,5 @@ for div in divs:
     }
     documents.append(document)
 
-with open("data.json", "w") as f:
+with open("../src/main/resources/data/data.json", "w") as f:
     json.dump(documents, f)

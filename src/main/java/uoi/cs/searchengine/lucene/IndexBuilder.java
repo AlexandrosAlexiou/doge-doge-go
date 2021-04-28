@@ -18,6 +18,8 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class IndexBuilder {
 
@@ -39,7 +40,7 @@ public class IndexBuilder {
         // Analyzer specifies options for text tokenization and normalization (e.g., stemming, stop words removal, case-folding)
         Analyzer analyzer = new Analyzer() {
             @Override
-            protected TokenStreamComponents createComponents( String fieldName ) {
+            protected TokenStreamComponents createComponents(String fieldName) {
                 // tokenization (Lucene's StandardTokenizer is suitable for most text retrieval occasions)
                 TokenStreamComponents ts = new TokenStreamComponents(new StandardTokenizer());
                 // transforming all tokens into lowercased ones (recommended for the majority of the problems)
@@ -59,55 +60,60 @@ public class IndexBuilder {
         this.iWriter = new IndexWriter(directory, config);
     }
 
-    public ArrayList<Article> build(String path) throws IOException {
+    public void build(String path) throws IOException {
 
-        // This is the field setting for metadata field (no tokenization, and stored).
-        FieldType url = new FieldType();
-        url.setOmitNorms(true);
-        url.setIndexOptions(IndexOptions.DOCS);
-        url.setStored(true);
-        url.setTokenized(false);
-        url.freeze();
+        // This is the field setting for url field (no tokenization, and stored).
+        FieldType urlFieldType = new FieldType();
+        urlFieldType.setOmitNorms(true);
+        urlFieldType.setIndexOptions(IndexOptions.DOCS);
+        urlFieldType.setStored(true);
+        urlFieldType.setTokenized(false);
+        urlFieldType.freeze();
 
         // This is the field setting for title text field (tokenized, searchable, store document vectors)
-        FieldType title = new FieldType();
-        title.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
-        title.setStoreTermVectors(true);
-        title.setStoreTermVectorPositions(true);
-        title.setTokenized(true);
-        title.setStored(true);
-        title.freeze();
+        FieldType titleFieldType  = new FieldType();
+        titleFieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+        titleFieldType.setStoreTermVectors(true);
+        titleFieldType.setStoreTermVectorPositions(true);
+        titleFieldType.setTokenized(true);
+        titleFieldType.setStored(true);
+        titleFieldType.freeze();
 
         // This is the field setting for normal text field (tokenized, searchable, store document vectors)
-        FieldType text = new FieldType();
-        text.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
-        text.setStoreTermVectors(true);
-        text.setStoreTermVectorPositions(true);
-        text.setTokenized(true);
-        text.setStored(true);
-        text.freeze();
+        FieldType textFieldType  = new FieldType();
+        textFieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+        textFieldType.setStoreTermVectors(true);
+        textFieldType.setStoreTermVectorPositions(true);
+        textFieldType.setTokenized(true);
+        textFieldType.setStored(true);
+        textFieldType.freeze();
 
-        ArrayList<Article> articles = new ArrayList<>();
         try (
                 InputStream inputStream = Files.newInputStream(Paths.get(path));
                 JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
         ) {
             reader.beginArray();
             while (reader.hasNext()) {
+                // Create a Document object
+                Document document = new Document();
+                // Get document data from the json data file
                 Article article = new Gson().fromJson(reader, Article.class);
-                articles.add(article);
+                // Add each field to the document with the appropriate field type options
+                document.add( new Field(ApplicationConstants.URL, article.getUrl(), urlFieldType));
+                document.add( new Field(ApplicationConstants.TITLE, article.getTitle(), titleFieldType));
+                document.add( new Field(ApplicationConstants.TEXT, article.getText(), textFieldType));
+                // index it
+                this.iWriter.addDocument(document);
             }
             reader.endArray();
-        }
-        return articles;
-    }
 
-    public void close() throws IOException {
-        this.iWriter.close();
-        this.directory.close();
+            this.iWriter.close();
+            this.directory.close();
+        }
     }
 
     public static void main(String[] args) throws IOException {
-        IndexBuilder builder = new IndexBuilder(ApplicationConstants.INDEX_PATH);
+        IndexBuilder iBuilder = new IndexBuilder(ApplicationConstants.INDEX_PATH);
+        iBuilder.build(ApplicationConstants.CORPUS_PATH);
     }
 }

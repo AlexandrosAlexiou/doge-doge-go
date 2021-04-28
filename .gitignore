@@ -4,8 +4,8 @@
 # MacOS
 .DS_Store
 
-# Data
-data.json
+# Lucene Index
+src/main/resources/Index/*
 
 HELP.md
 .gradle

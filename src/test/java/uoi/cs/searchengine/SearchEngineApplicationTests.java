@@ -14,9 +14,5 @@ class SearchEngineApplicationTests {
 
     @Test
     void loadArticles() throws IOException {
-        File file = new File("src/main/resources/data/data.json");
-        String path = file.getAbsolutePath();
-        ArrayList<Article> articles = new IndexBuilder(ApplicationConstants.INDEX_PATH).build(ApplicationConstants.CORPUS_PATH);
-        assert articles.size() == 500;
     }
 }

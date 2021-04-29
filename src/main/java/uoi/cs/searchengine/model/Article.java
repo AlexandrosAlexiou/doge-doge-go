@@ -2,9 +2,9 @@ package uoi.cs.searchengine.model;
 
 public class Article {
 
-    private String url;
-    private String title;
-    private String text;
+    private final String url;
+    private final String title;
+    private final String text;
 
     public Article(String url, String title, String text) {
         this.url = url;
@@ -16,24 +16,12 @@ public class Article {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     @Override

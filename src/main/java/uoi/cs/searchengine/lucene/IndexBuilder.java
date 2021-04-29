@@ -6,11 +6,6 @@ import uoi.cs.searchengine.model.Article;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopFilter;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.en.KStemFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
@@ -37,21 +32,7 @@ public class IndexBuilder {
         String path = new File(index_path).getAbsolutePath();
         this.directory = FSDirectory.open(new File(path).toPath());
 
-        // Analyzer specifies options for text tokenization and normalization (e.g., stemming, stop words removal, case-folding)
-        Analyzer analyzer = new Analyzer() {
-            @Override
-            protected TokenStreamComponents createComponents(String fieldName) {
-                // tokenization (Lucene's StandardTokenizer is suitable for most text retrieval occasions)
-                TokenStreamComponents ts = new TokenStreamComponents(new StandardTokenizer());
-                // transforming all tokens into lowercased ones (recommended for the majority of the problems)
-                ts = new TokenStreamComponents( ts.getSource(), new LowerCaseFilter(ts.getTokenStream()));
-                // remove stop words (unnecessary to remove stop words unless you can't afford the extra disk space)
-                ts = new TokenStreamComponents( ts.getSource(), new StopFilter(ts.getTokenStream(), EnglishAnalyzer.ENGLISH_STOP_WORDS_SET ));
-                // apply stemming
-                ts = new TokenStreamComponents( ts.getSource(), new KStemFilter(ts.getTokenStream()));
-                return ts;
-            }
-        };
+        Analyzer analyzer = new DogeDogeGoAnalyzer();
 
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         // IndexWriterConfig.OpenMode.CREATE will override the original index in the folder

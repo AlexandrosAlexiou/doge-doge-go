@@ -42,7 +42,7 @@ public class IndexBuilder {
     }
 
     public void build(String path) throws IOException {
-
+        path = new File(path).getAbsolutePath();
         // This is the field setting for url field (no tokenization, and stored).
         FieldType urlFieldType = new FieldType();
         urlFieldType.setOmitNorms(true);

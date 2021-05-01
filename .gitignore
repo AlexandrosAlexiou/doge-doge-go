@@ -5,7 +5,11 @@
 .DS_Store
 
 # Lucene Index
-src/main/resources/Index/*
+backend/src/main/resources/Index/*
+
+# ignore React static files
+backend/src/main/resources/static/*
+!backend/src/main/resources/static/.gitkeep
 
 HELP.md
 .gradle

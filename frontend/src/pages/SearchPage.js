@@ -55,7 +55,7 @@ function SearchPage() {
                         <div className='searchPage__result'>
                             <a className='searchPage__url' href={item.url}>en.wikipedia.org ▿</a>
                             <a className='searchPage__resultTitle'href={item.url}>
-                                <h2>{item.title}</h2>
+                                <h2>{item.title.replace(/_/g, ' ')}</h2>
                             </a>
                             <p className="searchPage__resultSnippet">
                                 snippet

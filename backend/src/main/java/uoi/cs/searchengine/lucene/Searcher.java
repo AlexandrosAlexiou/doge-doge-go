@@ -1,5 +1,6 @@
 package uoi.cs.searchengine.lucene;
 
+import org.apache.lucene.document.Document;
 import uoi.cs.searchengine.ApplicationConstants;
 import uoi.cs.searchengine.model.Article;
 import uoi.cs.searchengine.service.ResultsService;
@@ -41,10 +42,10 @@ public class Searcher implements ResultsService {
 
         ArrayList<Article> results = new ArrayList<>();
         for (int i = 0; i < docs.scoreDocs.length; i++) {
-           // results.add(iSearcher.doc(docs.scoreDocs[i].doc).getFields().get(1).stringValue());
-            String article_url = iSearcher.doc(docs.scoreDocs[i].doc).getFields().get(0).stringValue();
-            String article_title = iSearcher.doc(docs.scoreDocs[i].doc).getFields().get(1).stringValue();
-            String article_text = iSearcher.doc(docs.scoreDocs[i].doc).getFields().get(2).stringValue();
+            Document doc = iSearcher.doc(docs.scoreDocs[i].doc);
+            String article_url = doc.getFields().get(0).stringValue();
+            String article_title = doc.getFields().get(1).stringValue();
+            String article_text = doc.getFields().get(2).stringValue();
             results.add(new Article(article_url, article_title, article_text));
         }
 

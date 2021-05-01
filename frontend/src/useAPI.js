@@ -5,7 +5,7 @@ const useAPI = (term) => {
     useEffect(() => {
         const fetchData = async() => {
             fetch(
-                `/${term}`
+                `/api/v1/query/${term}`
             )
             .then(response => response.json())
             .then(result => {setData(result)})

@@ -16,7 +16,7 @@ function SearchPage() {
             <div className='searchPage__header'>
                 <Link to="/">
                 <div className='searchPage__logo'>
-                    <svg width="250" height="250" viewBox="0 0 40 90"
+                    <svg width="200" height="200" viewBox="0 0 40 90"
                                 fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M10.0006 0H29.3993C34.9418 0 39.3999 4.52599 39.3999 10.1529V29.8471C39.3999 35.474 34.9418 40 29.3993 40H10.0006C4.45809 40 0 35.474 0 29.8471V10.1529C0 4.52599 4.45809 0 10.0006 0Z"

@@ -37,8 +37,7 @@ public class Searcher implements ResultsService {
         // you need to create a Lucene searcher
         IndexSearcher iSearcher = new IndexSearcher(iReader);
 
-        int top = 500; // Let's just retrieve the talk 500 results
-        TopDocs docs = iSearcher.search(lucene_query, top); // retrieve the top 10 results; retrieved results are stored in TopDocs
+        TopDocs docs = iSearcher.search(lucene_query, iReader.maxDoc()); // retrieve the top 10 results; retrieved results are stored in TopDocs
 
         ArrayList<Article> results = new ArrayList<>();
         for (int i = 0; i < docs.scoreDocs.length; i++) {

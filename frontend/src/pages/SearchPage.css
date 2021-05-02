@@ -12,7 +12,7 @@
 .searchPage__logo {
     object-fit: contain;
     height: 50px;
-    margin-right: -20px;
+    margin-right: -80px;
     margin-top: 10px;
 }
 
@@ -28,19 +28,19 @@
 
 .searchPage__resultCount {
     color: rgb(135, 135, 135);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .searchPage__results {
     max-width: 650px;
     margin-top: 20px;
-    margin-left: 240px;
+    margin-left: 120px;
     margin-bottom: 100px;
 }
 
 .searchPage__resultTitle {
     text-decoration: none;
-    color: rgba(37, 104, 116, 0.886);
+    color: #3C4F76;
 }
 
 .searchPage__resultTitle:hover {
@@ -49,14 +49,18 @@
 
 .searchPage__url {
     font-style: italic;
-    color:rgb(201, 145, 110);
+    color:#a9a6ce;
 }
 
 .searchPage__resultTitle > h2 {
     font-weight: 500;
+    font-size: 19px;
 }
 
 .searchPage__resultSnippet {
     margin-top: 10px;
-    font-weight: 300;
+    font-weight: 400;
+    font-size: 13px;
+    margin-left: auto;
+    margin-right:100px;
 }

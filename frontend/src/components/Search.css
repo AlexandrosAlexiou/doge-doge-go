@@ -9,6 +9,7 @@
     margin: 0 auto;
     margin-top: 40px;
     max-width: 560px;
+    opacity:0.5;
 }
 
 .search__input > input {
@@ -24,8 +25,33 @@
     outline: none;
 }
 
+@keyframes bounce {
+    0%, 20%, 60%, 100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0);
+    }
+  
+    40% {
+      -webkit-transform: translateY(-10px);
+      transform: translateY(-10px);
+    }
+  
+    80% {
+      -webkit-transform: translateY(-5px);
+      transform: translateY(-5px);
+    }
+  }
+
+.search__input:hover {
+    color: #383F51;
+    border: #383F51 solid 1px;
+    background:#fff;
+    opacity:1;
+    animation: bounce .5s;
+}
+
 .search__inputIcon {
-    color: #b0740d;
+    color: #383F51;
 }
 
 .search__buttons {
@@ -40,7 +66,7 @@
     background-color: #f8f8f8;
     border: 1px solid white;
     text-transform: inherit;
-    color: hsl(16, 82%, 36%);
+    color: #3C4F76;
 }
 
 .search__buttons button:hover {

@@ -6,7 +6,7 @@ import Search from "../components/Search";
 import { Link } from "react-router-dom";
 
 function SearchPage() {
-    const [{ term }, dispatch] = useStateValue();
+    const [{ term }] = useStateValue();
     const { data } = useAPI(term);
 
     console.log(data);
@@ -16,7 +16,7 @@ function SearchPage() {
             <div className='searchPage__header'>
                 <Link to="/">
                 <div className='searchPage__logo'>
-                    <svg width="200" height="200" viewBox="0 0 40 90"
+                    <svg width="190" height="190" viewBox="0 -5 80 95"
                                 fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M10.0006 0H29.3993C34.9418 0 39.3999 4.52599 39.3999 10.1529V29.8471C39.3999 35.474 34.9418 40 29.3993 40H10.0006C4.45809 40 0 35.474 0 29.8471V10.1529C0 4.52599 4.45809 0 10.0006 0Z"
@@ -53,12 +53,12 @@ function SearchPage() {
                     
                     {data?.map(item => (
                         <div className='searchPage__result'>
-                            <a className='searchPage__url' href={item.url}>en.wikipedia.org ▿</a>
-                            <a className='searchPage__resultTitle'href={item.url}>
+                            <a className='searchPage__url' href={item.url} rel="noopener noreferrer" target="_blank">en.wikipedia.org ▿</a>
+                            <a className='searchPage__resultTitle' href={item.url} rel="noopener noreferrer" target="_blank">
                                 <h2>{item.title.replace(/_/g, ' ')}</h2>
                             </a>
                             <p className="searchPage__resultSnippet">
-                                snippet
+                                {item.text.slice(0,320)}...
                             </p>
                         </div>
                     ))}

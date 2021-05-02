@@ -1,6 +1,5 @@
 import React from 'react'
 import './Home.css'
-import { Link } from 'react-router-dom';
 import Search from '../components/Search';
 
 function Home() {
@@ -8,12 +7,12 @@ function Home() {
         <div className='home'>
             <div className='home__header'>
                 <div className='home__headerLeft'>
-                    <a href='https://github.com/AlexandrosAlexiou'>Alexiou</a>
-                    <a href='https://github.com/giannisChouliaras'>Chouliaras</a>
+                    <a href='https://github.com/AlexandrosAlexiou' rel="noopener noreferrer" target="_blank">Alexiou</a>
+                    <a href='https://github.com/giannisChouliaras' rel="noopener noreferrer" target="_blank">Chouliaras</a>
                 </div>
                 <div className='home__headerRight'>
-                    <a href='http://cs.uoi.gr/~pitoura/'>Professor</a>
-                    <a href='http://cs.uoi.gr/~pitoura/courses/ap/ap21/index.html'>Course</a>
+                    <a href='http://cs.uoi.gr/~pitoura/' rel="noopener noreferrer" target="_blank">Professor</a>
+                    <a href='http://cs.uoi.gr/~pitoura/courses/ap/ap21/index.html' rel="noopener noreferrer" target="_blank">Course</a>
                 </div>
             </div>
             

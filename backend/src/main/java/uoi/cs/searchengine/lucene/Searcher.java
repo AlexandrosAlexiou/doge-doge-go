@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class Searcher implements ResultsService {
 
-    Analyzer analyzer = new DogeDogeGoAnalyzer();
+    private final Analyzer analyzer = new DogeDogeGoAnalyzer();
 
     public Searcher() { }
 

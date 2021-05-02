@@ -1,15 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './SearchPage.css'
 import { useStateValue } from "../StateProvider";
 import useAPI from "../useAPI";
 import Search from "../components/Search";
 import { Link } from "react-router-dom";
+import ReactPaginate from 'react-paginate';
 
 function SearchPage() {
     const [{ term }] = useStateValue();
     const { data } = useAPI(term);
+    const [pageNumber, setPageNumber] = useState(0); // what page we are in 
 
-    console.log(data);
+    // For pagination
+    const dataPerPage = 7;
+    const dataVisited = pageNumber * dataPerPage;
+    
+    // slice data and then display them
+    const displayData = data?.slice(dataVisited, dataVisited+dataPerPage)
+    .map(item => {
+        return (
+            <div className='searchPage__result'>
+                <a className='searchPage__url' href={item.url} rel="noopener noreferrer" target="_blank">en.wikipedia.org ▿</a>
+                <a className='searchPage__resultTitle' href={item.url} rel="noopener noreferrer" target="_blank">
+                    <h2>{item.title.replace(/_/g, ' ')}</h2>
+                </a>
+                <p className="searchPage__resultSnippet">
+                {item.text.slice(0,320)}...
+                </p>
+            </div> 
+        )
+    });
+
+    const dataCount = Math.ceil(data?.length / dataPerPage);
+    const changeData = ({selected}) => {
+        setPageNumber(selected);
+    };
 
     return (
         <div className='searchPage'>
@@ -48,20 +73,22 @@ function SearchPage() {
             {term && (
                 <div className="searchPage__results">
                     <p className='searchPage__resultCount'>
-                        About {data?.length} results for {term}
+                        page {pageNumber + 1} of about {data?.length} results for {term}
                     </p>
-                    
-                    {data?.map(item => (
-                        <div className='searchPage__result'>
-                            <a className='searchPage__url' href={item.url} rel="noopener noreferrer" target="_blank">en.wikipedia.org ▿</a>
-                            <a className='searchPage__resultTitle' href={item.url} rel="noopener noreferrer" target="_blank">
-                                <h2>{item.title.replace(/_/g, ' ')}</h2>
-                            </a>
-                            <p className="searchPage__resultSnippet">
-                                {item.text.slice(0,320)}...
-                            </p>
-                        </div>
-                    ))}
+
+                    {displayData}
+
+                    <ReactPaginate 
+                        previousLabel={"Previous"}
+                        nextLabel={"Next"}
+                        pageCount={dataCount}
+                        onPageChange={changeData}
+                        containerClassName={"paginationBttns"}
+                        previousLinkClassName={"previousBttn"}
+                        nextLinkClassName={"nextBttn"}
+                        disabledClassName={"paginationDisabled"}
+                        activeClassName={"paginationActive"}
+                    />
 
                 </div>)}
         </div>

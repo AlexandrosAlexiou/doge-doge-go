@@ -64,3 +64,32 @@
     margin-left: auto;
     margin-right:100px;
 }
+
+
+/* Pagination style */
+.paginationBttns {
+    width: 50%;
+    height: 1px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.paginationBttns a {
+    padding: 4px;
+    margin: 5px;
+    border-radius: 10px;
+    border: .5px solid #3C4F76;
+    color: #3C4F76;
+    cursor: pointer;
+}
+
+.paginationBttns a:hover {
+    color: white;
+    background-color: #3C4F76;
+}
+
+.paginationActive a {
+    color: white;
+    background-color: #3C4F76;
+}

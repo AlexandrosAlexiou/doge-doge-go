@@ -51,8 +51,6 @@ function Search( { hideButtons = false } ) {
                     </Button>
                 </div>
             )}
-
-           
         </form>
     )
 }

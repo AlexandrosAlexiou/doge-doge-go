@@ -12,7 +12,7 @@ function SearchPage() {
     const [pageNumber, setPageNumber] = useState(0); // what page we are in 
 
     // For pagination
-    const dataPerPage = 7;
+    const dataPerPage = 10;
     const dataVisited = pageNumber * dataPerPage;
     
     // slice data and then display them

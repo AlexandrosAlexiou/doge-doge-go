@@ -1,6 +1,9 @@
 package uoi.cs.searchengine.lucene;
 
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.highlight.*;
 import uoi.cs.searchengine.ApplicationConstants;
 import uoi.cs.searchengine.model.Article;
 import uoi.cs.searchengine.service.ResultsService;
@@ -18,6 +21,7 @@ import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 public class Searcher implements ResultsService {
@@ -56,8 +60,38 @@ public class Searcher implements ResultsService {
         return results;
     }
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public ArrayList<Article> searchAndHighlight(String q) throws Exception {
+        Directory dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
+        IndexReader reader = DirectoryReader.open(dir);
+        IndexSearcher is = new IndexSearcher(reader);
+        DogeDogeGoAnalyzer analyzer = new DogeDogeGoAnalyzer();
+        QueryParser parser = new QueryParser(ApplicationConstants.TEXT, analyzer);
+        Query query = parser.parse(q);
+
+
+        TopDocs hits = is.search(query, reader.maxDoc());
+
+        QueryScorer scorer = new QueryScorer(query);
+        Fragmenter fragmenter = new SimpleSpanFragmenter(scorer);
+        SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<b><font color='black'>", "</font></b>");
+        Highlighter highlighter = new Highlighter(simpleHTMLFormatter, scorer);
+        highlighter.setTextFragmenter(fragmenter);
+        ArrayList<Article> res = new ArrayList<>();
+        for (ScoreDoc scoreDoc : hits.scoreDocs) {
+            Document doc = is.doc(scoreDoc.doc);
+            String text = doc.get(ApplicationConstants.TEXT);
+            TokenStream tokenStream = analyzer.tokenStream(ApplicationConstants.TEXT, new StringReader(text));
+            String bestFrag = highlighter.getBestFragment(tokenStream, text);
+            res.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), bestFrag));
+        }
+        reader.close();
+        return res;
+    }
+
+    public static void main(String[] args) throws Exception {
         Searcher tet = new Searcher();
-        System.out.println(tet.search("india"));
+        //System.out.println(tet.search("india"));
+        ArrayList<Article> res = tet.searchAndHighlight("india");
+        System.out.println(res.get(0));
     }
 }

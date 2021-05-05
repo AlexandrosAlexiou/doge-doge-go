@@ -19,10 +19,10 @@ public class SearchController {
 
     @RequestMapping("/query/{term}")
     @ResponseBody
-    public ArrayList<Article> search(@PathVariable String term) {
+    public ArrayList<Article> search(@PathVariable String term) throws Exception {
         try{
             Searcher iSearcher = new Searcher();
-             return iSearcher.search(term);
+             return iSearcher.searchAndHighlight(term);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

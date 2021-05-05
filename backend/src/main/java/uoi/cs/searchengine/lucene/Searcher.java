@@ -81,8 +81,8 @@ public class Searcher implements ResultsService {
             Document doc = is.doc(scoreDoc.doc);
             String text = doc.get(ApplicationConstants.TEXT);
             TokenStream tokenStream = analyzer.tokenStream(ApplicationConstants.TEXT, new StringReader(text));
-            String bestFrag = highlighter.getBestFragment(tokenStream, text);
-            res.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), bestFrag));
+            String[] bestFrag = highlighter.getBestFragments(tokenStream, text, 10);
+            res.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), String.join("...", bestFrag)));
         }
         reader.close();
         return res;

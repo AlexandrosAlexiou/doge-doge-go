@@ -2,10 +2,7 @@ package uoi.cs.searchengine.web;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import uoi.cs.searchengine.lucene.Searcher;
 import uoi.cs.searchengine.model.Article;
 
@@ -17,12 +14,12 @@ import java.util.ArrayList;
 @RequestMapping("/api/v1")
 public class SearchController {
 
-    @RequestMapping("/query/{term}")
+    @RequestMapping("/query")
     @ResponseBody
-    public ArrayList<Article> search(@PathVariable String term) throws Exception {
+    public ArrayList<Article> search(@RequestParam String q) throws Exception {
         try{
             Searcher iSearcher = new Searcher();
-             return iSearcher.searchAndHighlight(term);
+             return iSearcher.searchAndHighlight(q);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

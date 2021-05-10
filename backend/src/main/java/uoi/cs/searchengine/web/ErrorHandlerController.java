@@ -12,6 +12,6 @@ public class ErrorHandlerController implements ErrorController{
     @RequestMapping("/error")
     @ResponseBody
     public String getErrorPath() {
-        return "<script>document.location.href=\"/\"</script>";
+        return "<h2 style=\"text-align: center;\">404. That’s an error. The requested URL was not found on this server. That’s all we know.</h2>";
     }
 }

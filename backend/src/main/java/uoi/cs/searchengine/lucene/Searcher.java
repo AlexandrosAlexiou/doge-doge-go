@@ -73,7 +73,7 @@ public class Searcher implements ResultsService {
 
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer);
-        SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<b><font color='black'>", "</font></b>");
+        SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter(ApplicationConstants.PRE_TAG, ApplicationConstants.POST_TAG);
         Highlighter highlighter = new Highlighter(simpleHTMLFormatter, scorer);
         highlighter.setTextFragmenter(fragmenter);
         ArrayList<Article> res = new ArrayList<>();

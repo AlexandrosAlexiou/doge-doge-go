@@ -25,7 +25,11 @@ public class DogeDogeGoSpellChecker {
         SpellChecker checker = new SpellChecker(directory);
         IndexReader reader = DirectoryReader.open(directory);
         //checker.indexDictionary(txt_dict, new IndexWriterConfig(new DogeDogeGoAnalyzer()), false);
-        checker.indexDictionary(new LuceneDictionary(reader, "text"), new IndexWriterConfig(new DogeDogeGoAnalyzer()), true);
+        checker.indexDictionary(
+                new LuceneDictionary(reader, ApplicationConstants.TEXT),
+                new IndexWriterConfig(new DogeDogeGoAnalyzer()),
+                true
+        );
         directory.close();
 
         // Searching and presenting the suggested words by selecting a string distance

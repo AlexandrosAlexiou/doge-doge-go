@@ -8,4 +8,7 @@ public class ApplicationConstants {
     public static final String URL = "url";
     public static final String TITLE = "title";
     public static final String TEXT = "text";
+
+    public static final String PRE_TAG = "<b><font color='black'>";
+    public static final String POST_TAG = "</font></b>";
 }

@@ -3,6 +3,7 @@ package uoi.cs.searchengine;
 public class ApplicationConstants {
     public static final String CORPUS_PATH = "src/main/resources/data/data.json";
     public static final String INDEX_PATH = "src/main/resources/Index";
+    public static final String ENGLISH_DICTIONARY = "src/main/resources/Dictionary/dict.txt";
 
     public static final String URL = "url";
     public static final String TITLE = "title";

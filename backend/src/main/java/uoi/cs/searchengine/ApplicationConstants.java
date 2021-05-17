@@ -9,6 +9,6 @@ public class ApplicationConstants {
     public static final String TITLE = "title";
     public static final String TEXT = "text";
 
-    public static final String PRE_TAG = "<b><font color='black'>";
-    public static final String POST_TAG = "</font></b>";
+    public static final String PRE_TAG = "<b><font color='black'><mark>";
+    public static final String POST_TAG = "</font></mark></b>";
 }

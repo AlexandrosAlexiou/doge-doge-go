@@ -3,6 +3,7 @@
 
 # Lucene Index
 backend/src/main/resources/Index/*
+!.gitkeep
 
 # ignore React static files
 backend/src/main/resources/static/*

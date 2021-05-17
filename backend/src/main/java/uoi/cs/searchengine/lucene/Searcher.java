@@ -1,6 +1,5 @@
 package uoi.cs.searchengine.lucene;
 
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.highlight.*;
@@ -21,7 +20,6 @@ import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 
 public class Searcher implements ResultsService {
@@ -76,12 +74,13 @@ public class Searcher implements ResultsService {
         Highlighter highlighter = new Highlighter(simpleHTMLFormatter, scorer);
         highlighter.setTextFragmenter(fragmenter);
         ArrayList<Article> res = new ArrayList<>();
+        highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
         for (ScoreDoc scoreDoc : hits.scoreDocs) {
             Document doc = is.doc(scoreDoc.doc);
             String text = doc.get(ApplicationConstants.TEXT);
-            TokenStream tokenStream = analyzer.tokenStream(ApplicationConstants.TEXT, new StringReader(text));
-            String bestFrag = highlighter.getBestFragments(tokenStream, text, 3, "...");
-            res.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), bestFrag));
+            //TokenStream tokenStream = analyzer.tokenStream(ApplicationConstants.TEXT, new StringReader(text));
+            String[] bestFrag = highlighter.getBestFragments(analyzer, ApplicationConstants.TEXT, text, 10);
+            res.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), String.join("...", bestFrag)));
         }
         reader.close();
         return res;
@@ -89,8 +88,7 @@ public class Searcher implements ResultsService {
 
     public static void main(String[] args) throws Exception {
         Searcher tet = new Searcher();
-        //System.out.println(tet.search("india"));
-        ArrayList<Article> res = tet.searchAndHighlight("india");
+        ArrayList<Article> res = tet.searchAndHighlight("Kyriakos Mitsotakis");
         System.out.println(res.get(0));
     }
 }

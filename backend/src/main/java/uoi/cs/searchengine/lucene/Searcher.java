@@ -64,7 +64,6 @@ public class Searcher implements ResultsService {
         Directory dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
         IndexReader reader = DirectoryReader.open(dir);
         IndexSearcher is = new IndexSearcher(reader);
-        DogeDogeGoAnalyzer analyzer = new DogeDogeGoAnalyzer();
         QueryParser parser = new QueryParser(ApplicationConstants.TEXT, analyzer);
         Query query = parser.parse(q);
 

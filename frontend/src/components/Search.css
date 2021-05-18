@@ -77,5 +77,6 @@
 }
 
 .search__buttonsHidden {
-    display: none !important;
+    opacity: 0;
+    visibility: hidden;
 }

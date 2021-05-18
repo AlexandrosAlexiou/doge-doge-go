@@ -5,7 +5,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.highlight.*;
 import uoi.cs.searchengine.ApplicationConstants;
 import uoi.cs.searchengine.model.Article;
-import uoi.cs.searchengine.service.ResultsService;
+import uoi.cs.searchengine.service.SearchService;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
@@ -22,25 +22,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Searcher implements ResultsService {
+public class Searcher implements SearchService {
 
     private final Analyzer analyzer = new DogeDogeGoAnalyzer();
+    private final Directory dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
 
-    public Searcher() { }
+    public Searcher() throws IOException { }
 
-    public ArrayList<Article> search(String query) throws IOException, ParseException {
-        QueryParser parser = new QueryParser(ApplicationConstants.TEXT, this.analyzer); // a query parser that transforms a text string into Lucene's query object
+    public ArrayList<Article> search(String q) throws IOException, ParseException {
 
-        Query lucene_query = parser.parse(query); // this is Lucene's query object
-
-        // Okay, now let's open an index and search for documents
-        Directory dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
         IndexReader iReader = DirectoryReader.open(dir);
-
-        // you need to create a Lucene searcher
         IndexSearcher iSearcher = new IndexSearcher(iReader);
+        QueryParser parser = new QueryParser(ApplicationConstants.TEXT, this.analyzer);
+        Query query = parser.parse(q);
 
-        TopDocs docs = iSearcher.search(lucene_query, iReader.maxDoc());
+        TopDocs docs = iSearcher.search(query, iReader.maxDoc());
 
         ArrayList<Article> results = new ArrayList<>();
         for (int i = 0; i < docs.scoreDocs.length; i++) {
@@ -51,39 +47,38 @@ public class Searcher implements ResultsService {
             results.add(new Article(article_url, article_title, article_text));
         }
 
-        // remember to close the index and the directory
         iReader.close();
         dir.close();
-
         return results;
     }
 
-    public ArrayList<Article> searchAndHighlight(String q) throws Exception {
-        Directory dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
-        IndexReader reader = DirectoryReader.open(dir);
-        IndexSearcher is = new IndexSearcher(reader);
+    public ArrayList<Article> searchAndHighlight(String q) throws IOException, ParseException, InvalidTokenOffsetsException {
+
+        IndexReader iReader = DirectoryReader.open(dir);
+        IndexSearcher iSearcher = new IndexSearcher(iReader);
         QueryParser parser = new QueryParser(ApplicationConstants.TEXT, analyzer);
         Query query = parser.parse(q);
 
-
-        TopDocs hits = is.search(query, reader.maxDoc());
+        TopDocs hits = iSearcher.search(query, iReader.maxDoc());
 
         QueryScorer scorer = new QueryScorer(query);
         Fragmenter fragmenter = new SimpleSpanFragmenter(scorer);
         SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter(ApplicationConstants.PRE_TAG, ApplicationConstants.POST_TAG);
         Highlighter highlighter = new Highlighter(simpleHTMLFormatter, scorer);
         highlighter.setTextFragmenter(fragmenter);
-        ArrayList<Article> res = new ArrayList<>();
+        ArrayList<Article> results = new ArrayList<>();
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
         for (ScoreDoc scoreDoc : hits.scoreDocs) {
-            Document doc = is.doc(scoreDoc.doc);
+            Document doc = iSearcher.doc(scoreDoc.doc);
             String text = doc.get(ApplicationConstants.TEXT);
             //TokenStream tokenStream = analyzer.tokenStream(ApplicationConstants.TEXT, new StringReader(text));
-            String[] bestFrag = highlighter.getBestFragments(analyzer, ApplicationConstants.TEXT, text, 10);
-            res.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), String.join("...", bestFrag)));
+            String[] bestFrag = highlighter.getBestFragments(analyzer, ApplicationConstants.TEXT, text, 4);
+            String highlighted = "...".concat(String.join("...", bestFrag).concat("..."));
+            results.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), highlighted));
         }
-        reader.close();
-        return res;
+        iReader.close();
+        dir.close();
+        return results;
     }
 
     public static void main(String[] args) throws Exception {

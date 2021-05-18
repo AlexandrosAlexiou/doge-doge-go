@@ -24,15 +24,19 @@ import java.util.ArrayList;
 
 public class Searcher implements SearchService {
 
-    private final Analyzer analyzer = new DogeDogeGoAnalyzer();
-    private final Directory dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
+    private final Analyzer analyzer;
+    private final Directory dir;
+    private final IndexReader iReader;
+    private final IndexSearcher iSearcher;
 
-    public Searcher() throws IOException { }
+    public Searcher() throws IOException {
+        this.analyzer = new DogeDogeGoAnalyzer();
+        this.dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
+        this.iReader = DirectoryReader.open(dir);
+        this.iSearcher = new IndexSearcher(iReader);
+    }
 
     public ArrayList<Article> search(String q) throws IOException, ParseException {
-
-        IndexReader iReader = DirectoryReader.open(dir);
-        IndexSearcher iSearcher = new IndexSearcher(iReader);
         QueryParser parser = new QueryParser(ApplicationConstants.TEXT, this.analyzer);
         Query query = parser.parse(q);
 
@@ -46,16 +50,10 @@ public class Searcher implements SearchService {
             String article_text = doc.getFields().get(2).stringValue();
             results.add(new Article(article_url, article_title, article_text));
         }
-
-        iReader.close();
-        dir.close();
         return results;
     }
 
     public ArrayList<Article> searchAndHighlight(String q) throws IOException, ParseException, InvalidTokenOffsetsException {
-
-        IndexReader iReader = DirectoryReader.open(dir);
-        IndexSearcher iSearcher = new IndexSearcher(iReader);
         QueryParser parser = new QueryParser(ApplicationConstants.TEXT, analyzer);
         Query query = parser.parse(q);
 
@@ -76,14 +74,17 @@ public class Searcher implements SearchService {
             String highlighted = "...".concat(String.join("...", bestFrag).concat("..."));
             results.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), highlighted));
         }
-        iReader.close();
-        dir.close();
         return results;
     }
 
+    public void close() throws IOException {
+        iReader.close();
+        dir.close();
+    }
+
     public static void main(String[] args) throws Exception {
-        Searcher tet = new Searcher();
-        ArrayList<Article> res = tet.searchAndHighlight("Kyriakos Mitsotakis");
+        Searcher test = new Searcher();
+        ArrayList<Article> res = test.searchAndHighlight("Kyriakos Mitsotakis");
         System.out.println(res.get(0));
     }
 }

@@ -29,7 +29,8 @@ function SearchPage() {
                 <a className='searchPage__resultTitle' href={item.url} rel="noopener noreferrer" target="_blank">
                     <h2>{item.title.replace(/_/g, ' ')}</h2>
                 </a>
-                <p className="searchPage__resultSnippet" dangerouslySetInnerHTML={{__html: item.text.slice(0,320)}}>
+                <p className="searchPage__resultSnippet"
+                   dangerouslySetInnerHTML={{__html: (item.text.length > 600) ? item.text.slice(0, 600).concat("...") : item.text}}>
                 </p>
             </div> 
         )

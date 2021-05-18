@@ -1,6 +1,7 @@
 package uoi.cs.searchengine.lucene;
 
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -17,35 +18,44 @@ import java.util.Scanner;
 
 public class DogeDogeGoSpellChecker {
 
+    private final Analyzer analyzer;
+    private final Directory dir;
+    private final IndexReader iReader;
+    private final SpellChecker spellChecker;
+
+    public DogeDogeGoSpellChecker() throws IOException {
+        this.analyzer = new DogeDogeGoAnalyzer();
+        this.dir = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
+        this.iReader = DirectoryReader.open(dir);
+        this.spellChecker = new SpellChecker(dir);
+    }
 
     public List<String> suggest(String input_word) throws IOException {
-        // Creating the index
-        Directory directory = FSDirectory.open(new File(ApplicationConstants.INDEX_PATH).toPath());
         //PlainTextDictionary txt_dict = new PlainTextDictionary(Paths.get(ApplicationConstants.ENGLISH_DICTIONARY));
-        SpellChecker checker = new SpellChecker(directory);
-        IndexReader reader = DirectoryReader.open(directory);
-        //checker.indexDictionary(txt_dict, new IndexWriterConfig(new DogeDogeGoAnalyzer()), false);
-        checker.indexDictionary(
-                new LuceneDictionary(reader, ApplicationConstants.TEXT),
-                new IndexWriterConfig(new DogeDogeGoAnalyzer()),
+        //spellChecker.indexDictionary(txt_dict, new IndexWriterConfig(new DogeDogeGoAnalyzer()), false);
+
+        spellChecker.indexDictionary(
+                new LuceneDictionary(iReader, ApplicationConstants.TEXT),
+                new IndexWriterConfig(analyzer),
                 true
         );
-        directory.close();
 
         // Searching and presenting the suggested words by selecting a string distance
         //checker.setStringDistance(new JaroWinklerDistance());
         //checker.setStringDistance(new LevenshteinDistance());
         //checker.setStringDistance(new LuceneLevenshteinDistance());
-        checker.setStringDistance(new NGramDistance());
+        spellChecker.setStringDistance(new NGramDistance());
 
-        String[] suggestions = checker.suggestSimilar(input_word, 10);
+        String[] suggestions = spellChecker.suggestSimilar(input_word, 10);
 
-        // System.out.println("By '" + input_word + "' did you mean:");
+        iReader.close();
+        dir.close();
+
         return Arrays.asList(suggestions);
     }
 
 
-    public static void main(String[] args) throws IOException, Throwable {
+    public static void main(String[] args) throws Throwable {
         Scanner scan = new Scanner(System.in);
         DogeDogeGoSpellChecker spellChecker = new DogeDogeGoSpellChecker();
         System.out.print("\nType a word to spell check: ");

@@ -20,8 +20,10 @@ public class SearchController {
     @ResponseBody
     public ArrayList<Article> search(@RequestParam String q) throws Exception {
         try {
-            Searcher iSearcher = new Searcher();
-            return iSearcher.searchAndHighlight(q);
+            Searcher searcher = new Searcher();
+            ArrayList<Article> results = searcher.searchAndHighlight(q);
+            searcher.close();
+            return results;
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

@@ -79,9 +79,11 @@ function SearchPage() {
 
             {term && (
                 <div className="searchPage__results">
-                    <p className='searchPage__resultCount'>
-                        page {pageNumber + 1} of about {data?.length} results for {term}
-                    </p>
+                    <div className="searchPage__result_spellchecker">
+                        <p className='searchPage__resultCount'>
+                            page {pageNumber + 1} of about {data?.length} results for {term}
+                        </p>
+                    </div>
 
                     {displayData}
 

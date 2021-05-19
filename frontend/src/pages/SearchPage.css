@@ -17,10 +17,6 @@
 }
 
 .searchPage__headerBody > .search > .search__input {
-    margin-top: 0;
-    width: unset;
-    margin: unset;
-    max-width: unset;
     margin-top: 20px;
 }
 
@@ -94,4 +90,12 @@
 .paginationActive a {
     color: white;
     background-color: #3C4F76;
+}
+
+.searchPage__result_spellchecker {
+    padding: 5px;
+    margin: 5px 5px;
+    width: 50%;
+    margin-bottom: 60px;
+    margin-top: 20px;
 }

@@ -37,14 +37,13 @@ public class Searcher implements SearchService {
     }
 
     public ArrayList<Article> search(String q) throws IOException, ParseException {
-        QueryParser parser = new QueryParser(ApplicationConstants.TEXT, this.analyzer);
-        Query query = parser.parse(q);
+        Query query = createQuery(q, ApplicationConstants.TEXT);
 
-        TopDocs docs = iSearcher.search(query, iReader.maxDoc());
+        TopDocs hits = iSearcher.search(query, iReader.maxDoc());
 
         ArrayList<Article> results = new ArrayList<>();
-        for (int i = 0; i < docs.scoreDocs.length; i++) {
-            Document doc = iSearcher.doc(docs.scoreDocs[i].doc);
+        for (ScoreDoc scoreDoc : hits.scoreDocs) {
+            Document doc = iSearcher.doc(scoreDoc.doc);
             String article_url = doc.getFields().get(0).stringValue();
             String article_title = doc.getFields().get(1).stringValue();
             String article_text = doc.getFields().get(2).stringValue();
@@ -54,18 +53,17 @@ public class Searcher implements SearchService {
     }
 
     public ArrayList<Article> searchAndHighlight(String q) throws IOException, ParseException, InvalidTokenOffsetsException {
-        QueryParser parser = new QueryParser(ApplicationConstants.TEXT, analyzer);
-        Query query = parser.parse(q);
+        Query query = createQuery(q, ApplicationConstants.TEXT);
 
         TopDocs hits = iSearcher.search(query, iReader.maxDoc());
 
         QueryScorer scorer = new QueryScorer(query);
-        Fragmenter fragmenter = new SimpleSpanFragmenter(scorer);
-        SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter(ApplicationConstants.PRE_TAG, ApplicationConstants.POST_TAG);
-        Highlighter highlighter = new Highlighter(simpleHTMLFormatter, scorer);
-        highlighter.setTextFragmenter(fragmenter);
-        ArrayList<Article> results = new ArrayList<>();
+        Highlighter highlighter = new Highlighter(
+                new SimpleHTMLFormatter(ApplicationConstants.PRE_TAG, ApplicationConstants.POST_TAG), scorer);
+        highlighter.setTextFragmenter(new SimpleSpanFragmenter(scorer));
         highlighter.setMaxDocCharsToAnalyze(Integer.MAX_VALUE);
+
+        ArrayList<Article> results = new ArrayList<>();
         for (ScoreDoc scoreDoc : hits.scoreDocs) {
             Document doc = iSearcher.doc(scoreDoc.doc);
             String text = doc.get(ApplicationConstants.TEXT);
@@ -75,6 +73,11 @@ public class Searcher implements SearchService {
             results.add(new Article(doc.get(ApplicationConstants.URL), doc.get(ApplicationConstants.TITLE), highlighted));
         }
         return results;
+    }
+
+    private Query createQuery(String query, String field) throws ParseException {
+        QueryParser parser = new QueryParser(field, analyzer);
+        return parser.parse(query);
     }
 
     public void close() throws IOException {

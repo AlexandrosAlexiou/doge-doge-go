@@ -81,7 +81,10 @@ function SearchPage() {
                 <div className="searchPage__results">
                     <div className="searchPage__result_spellchecker">
                         <p className='searchPage__resultCount'>
-                            page {pageNumber + 1} of about {data?.length} results for {term}
+                            page {pageNumber + 1} of {Math.ceil(data?.length/dataPerPage)}
+                        </p>
+                        <p style={{marginTop: 10}}>
+                            {data?.length} results for <b>{term}</b>
                         </p>
                     </div>
 

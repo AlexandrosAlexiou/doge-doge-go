@@ -26,7 +26,7 @@
 
 .searchPage__resultCount {
     color: rgb(135, 135, 135);
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .searchPage__results {
@@ -94,8 +94,6 @@
 
 .searchPage__result_spellchecker {
     padding: 5px;
-    margin: 5px 5px;
     width: 50%;
-    margin-bottom: 60px;
-    margin-top: 20px;
+    margin: 20px 5px 10px;
 }

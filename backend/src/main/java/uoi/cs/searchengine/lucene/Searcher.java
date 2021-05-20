@@ -1,12 +1,12 @@
 package uoi.cs.searchengine.lucene;
 
-import org.apache.lucene.document.Document;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.highlight.*;
 import uoi.cs.searchengine.ApplicationConstants;
 import uoi.cs.searchengine.model.Article;
 import uoi.cs.searchengine.service.SearchService;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.highlight.*;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;

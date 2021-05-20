@@ -1,11 +1,12 @@
 package uoi.cs.searchengine.web;
 
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import uoi.cs.searchengine.lucene.DogeDogeGoSpellChecker;
 import uoi.cs.searchengine.lucene.Searcher;
 import uoi.cs.searchengine.model.Article;
+
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

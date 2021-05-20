@@ -1,12 +1,13 @@
 package uoi.cs.searchengine;
 
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import uoi.cs.searchengine.lucene.DogeDogeGoSpellChecker;
 import uoi.cs.searchengine.lucene.Searcher;
 import uoi.cs.searchengine.model.Article;
 import uoi.cs.searchengine.web.ErrorHandlerController;
 import uoi.cs.searchengine.web.SearchController;
+
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;

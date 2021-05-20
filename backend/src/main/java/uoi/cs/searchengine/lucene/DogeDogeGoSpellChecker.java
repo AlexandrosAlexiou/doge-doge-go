@@ -1,5 +1,6 @@
 package uoi.cs.searchengine.lucene;
 
+import uoi.cs.searchengine.ApplicationConstants;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
@@ -8,7 +9,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.spell.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import uoi.cs.searchengine.ApplicationConstants;
 
 import java.io.File;
 import java.io.IOException;

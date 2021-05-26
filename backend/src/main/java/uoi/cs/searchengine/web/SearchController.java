@@ -1,6 +1,6 @@
 package uoi.cs.searchengine.web;
 
-import uoi.cs.searchengine.lucene.DogeDogeGoSpellChecker;
+import uoi.cs.searchengine.lucene.SpellCheckerWrapper;
 import uoi.cs.searchengine.lucene.Searcher;
 import uoi.cs.searchengine.model.Article;
 
@@ -22,7 +22,7 @@ public class SearchController {
     public ArrayList<Article> search(@RequestParam String q) throws Exception {
         try {
             Searcher searcher = new Searcher();
-            ArrayList<Article> results = searcher.searchAndHighlight(q);
+            ArrayList<Article> results = searcher.search(q);
             searcher.close();
             return results;
         } catch (IOException | ParseException e) {
@@ -35,7 +35,7 @@ public class SearchController {
     @ResponseBody
     public List<String> suggest(@RequestParam String t) {
         try {
-            DogeDogeGoSpellChecker spellChecker = new DogeDogeGoSpellChecker();
+            SpellCheckerWrapper spellChecker = new SpellCheckerWrapper();
             return spellChecker.suggest(t);
         } catch (IOException e) {
             e.printStackTrace();

@@ -11,7 +11,7 @@ base_url = "https://en.wikipedia.org"
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
 
-response = requests.get(url=page_url, headers=headers, timeout=1000)
+response = requests.get(url=page_url, headers=headers, timeout=10000)
 soup = BeautifulSoup(response.content, "html.parser")
 wiki_wiki = wikipediaapi.Wikipedia('en')
 
@@ -24,12 +24,8 @@ for div in divs:
     article_title = unquote(article_url[6:])
     page_ref = wiki_wiki.page(article_title)
     print(article_title)
-    try:
-        title = page_ref.title
-        text = page_ref.text
-    except requests.exceptions.ReadTimeout:
-        break
-
+    title = page_ref.title.replace("_", " ")
+    text = page_ref.text
     document = {
         "url": f"{base_url}{article_url}",
         "title": title,
@@ -37,5 +33,8 @@ for div in divs:
     }
     documents.append(document)
 
-with open("..backend/src/main/resources/data/data.json", "w") as f:
+
+with open("corpus.json", "w") as f:
     json.dump(documents, f)
+
+print(f"Scraped: {len(documents)} documents")

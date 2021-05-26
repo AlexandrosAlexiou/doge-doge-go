@@ -1,6 +1,7 @@
 package uoi.cs.searchengine;
 
-import uoi.cs.searchengine.lucene.DogeDogeGoSpellChecker;
+import uoi.cs.searchengine.lucene.Constants;
+import uoi.cs.searchengine.lucene.SpellCheckerWrapper;
 import uoi.cs.searchengine.lucene.Searcher;
 import uoi.cs.searchengine.model.Article;
 import uoi.cs.searchengine.web.ErrorHandlerController;
@@ -43,7 +44,7 @@ class SearchEngineApplicationTests {
     void loadArticlesTest() throws IOException {
         ArrayList<Article> articles = new ArrayList<>();
         try (
-                InputStream inputStream = Files.newInputStream(Paths.get(ApplicationConstants.CORPUS_PATH));
+                InputStream inputStream = Files.newInputStream(Paths.get(Constants.CORPUS_PATH));
                 JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
         ) {
             reader.beginArray();
@@ -58,17 +59,17 @@ class SearchEngineApplicationTests {
     @Test
     public void searchTest() throws IOException, InvalidTokenOffsetsException, ParseException {
         Searcher searcher = new Searcher();
-        ArrayList<Article> results = searcher.searchAndHighlight("Greece");
-        assertThat(results.get(0).getTitle()).isEqualTo("COVID-19_pandemic_in_Greece");
+        ArrayList<Article> results = searcher.search("Greece");
+        assertThat(results.get(0).getTitle()).isEqualTo("COVID-19 pandemic in Greece");
 
-        results = searcher.searchAndHighlight("India");
-        assertThat(results.get(0).getTitle()).isEqualTo("COVID-19_pandemic_in_India");
+        results = searcher.search("India");
+        assertThat(results.get(0).getTitle()).isEqualTo("COVID-19 pandemic in India");
         searcher.close();
     }
 
     @Test
     public void suggestionsTest() throws IOException{
-        DogeDogeGoSpellChecker spellChecker = new DogeDogeGoSpellChecker();
+        SpellCheckerWrapper spellChecker = new SpellCheckerWrapper();
         List<String> suggestions = spellChecker.suggest("chldrne");
         assertThat(suggestions).contains("children");
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback} from 'react'
 import './Search.css'
 import SearchIcon from "@material-ui/icons/Search"
 import MicIcon from "@material-ui/icons/Mic";
@@ -18,7 +18,7 @@ function Search( { hideButtons = false } ) {
     const search = (e) => {
         e.preventDefault();
 
-        console.log("Hitted Enter");
+        console.log("Hit Enter");
         dispatch({
             type: actionTypes.SET_SEARCH_TERM,
             term: input,

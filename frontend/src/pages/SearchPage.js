@@ -21,13 +21,13 @@ function SearchPage() {
     },[term])
     
     // slice data and then display them
-    const displayData = data?.slice(dataVisited, dataVisited+dataPerPage)
+    const displayData = data?.slice(dataVisited, dataVisited + dataPerPage)
     .map(item => {
         return (
             <div className='searchPage__result'>
                 <a className='searchPage__url' href={item.url} rel="noopener noreferrer" target="_blank">en.wikipedia.org ▿</a>
                 <a className='searchPage__resultTitle' href={item.url} rel="noopener noreferrer" target="_blank">
-                    <h2>{item.title.replace(/_/g, ' ')}</h2>
+                    <h2 dangerouslySetInnerHTML={{__html: item.title.replace(/_/g, ' ')}}/>
                 </a>
                 <p className="searchPage__resultSnippet"
                    dangerouslySetInnerHTML={{__html: (item.text.length > 600) ? item.text.slice(0, 600).concat("...") : item.text}}>
@@ -36,7 +36,7 @@ function SearchPage() {
         )
     });
 
-    const dataCount = Math.ceil(data?.length / dataPerPage);
+    const pageCount = Math.ceil(data?.length / dataPerPage);
 
     const changeData = ({selected}) => {
         setPageNumber(selected);
@@ -93,7 +93,7 @@ function SearchPage() {
                     <ReactPaginate 
                         previousLabel={"Previous"}
                         nextLabel={"Next"}
-                        pageCount={dataCount}
+                        pageCount={pageCount}
                         onPageChange={changeData}
                         containerClassName={"paginationBttns"}
                         previousLinkClassName={"previousBttn"}

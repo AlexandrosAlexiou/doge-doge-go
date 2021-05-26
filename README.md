@@ -1,5 +1,5 @@
 <p align="center">
-<img height=250 src="https://raw.githubusercontent.com/AlexandrosAlexiou/doge-doge-go/main/frontend/public/favicon.ico?token=AGD7WPFAFOUQMJIMRN5BOW3AU6XZE"/>
+<img height=250 src="https://raw.githubusercontent.com/AlexandrosAlexiou/doge-doge-go/main/frontend/public/favicon.ico?token=AGD7WPAJYKZP6QZABKPSM2LAWD2UE"/>
 </p>
 
 # <div align="center">DogeDogeGo</div>

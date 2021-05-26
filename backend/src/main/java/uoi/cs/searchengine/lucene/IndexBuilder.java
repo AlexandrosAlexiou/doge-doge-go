@@ -1,6 +1,5 @@
 package uoi.cs.searchengine.lucene;
 
-import uoi.cs.searchengine.ApplicationConstants;
 import uoi.cs.searchengine.model.Article;
 
 import com.google.gson.Gson;
@@ -32,7 +31,7 @@ public class IndexBuilder {
         String path = new File(index_path).getAbsolutePath();
         this.directory = FSDirectory.open(new File(path).toPath());
 
-        Analyzer analyzer = new DogeDogeGoAnalyzer();
+        Analyzer analyzer = new CustomAnalyzer();
 
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
         // IndexWriterConfig.OpenMode.CREATE will override the original index in the folder
@@ -80,9 +79,9 @@ public class IndexBuilder {
                 // Get document data from the json data file
                 Article article = new Gson().fromJson(reader, Article.class);
                 // Add each field to the document with the appropriate field type options
-                document.add( new Field(ApplicationConstants.URL, article.getUrl(), urlFieldType));
-                document.add( new Field(ApplicationConstants.TITLE, article.getTitle(), titleFieldType));
-                document.add( new Field(ApplicationConstants.TEXT, article.getText(), textFieldType));
+                document.add( new Field(Constants.URL, article.getUrl(), urlFieldType));
+                document.add( new Field(Constants.TITLE, article.getTitle(), titleFieldType));
+                document.add( new Field(Constants.TEXT, article.getText(), textFieldType));
                 // index it
                 this.iWriter.addDocument(document);
             }
@@ -94,7 +93,7 @@ public class IndexBuilder {
     }
 
     public static void main(String[] args) throws IOException {
-        IndexBuilder iBuilder = new IndexBuilder(ApplicationConstants.INDEX_PATH);
-        iBuilder.build(ApplicationConstants.CORPUS_PATH);
+        IndexBuilder iBuilder = new IndexBuilder(Constants.INDEX_PATH);
+        iBuilder.build(Constants.CORPUS_PATH);
     }
 }

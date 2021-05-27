@@ -15,5 +15,4 @@ public interface SearchService {
 
     ArrayList<Article> searchByText(Query query) throws IOException, ParseException, InvalidTokenOffsetsException;
 
-    ArrayList<Article> searchByTitle(Query query) throws IOException, ParseException, InvalidTokenOffsetsException;
 }

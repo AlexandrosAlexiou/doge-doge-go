@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import './SearchPage.css'
 import { useStateValue } from "../StateProvider";
-import useAPI from "../useAPI";
+import useQueryAPI from "../useQueryAPI";
 import Search from "../components/Search";
 import { Link } from "react-router-dom";
 import ReactPaginate from 'react-paginate';
 
 function SearchPage() {
     const [{ term }] = useStateValue();
-    const { data } = useAPI(term);
-    const [pageNumber, setPageNumber] = useState(0); // what page we are in 
+    const { data, suggestions } = useQueryAPI(term);
+    const [pageNumber, setPageNumber] = useState(0); // what page we are in
 
     // For pagination
     const dataPerPage = 10;
@@ -21,18 +21,23 @@ function SearchPage() {
     },[term])
     
     // slice data and then display them
-    const displayData = data?.slice(dataVisited, dataVisited + dataPerPage)
-    .map(item => {
+    const displayData = data?.slice(dataVisited, dataVisited + dataPerPage).map(item => {
         return (
-            <div className='searchPage__result'>
+            <div key={item.title} className='searchPage__result'>
                 <a className='searchPage__url' href={item.url} rel="noopener noreferrer" target="_blank">en.wikipedia.org ▿</a>
                 <a className='searchPage__resultTitle' href={item.url} rel="noopener noreferrer" target="_blank">
-                    <h2 dangerouslySetInnerHTML={{__html: item.title.replace(/_/g, ' ')}}/>
+                    <h2 dangerouslySetInnerHTML={{__html: item.title}}/>
                 </a>
                 <p className="searchPage__resultSnippet"
                    dangerouslySetInnerHTML={{__html: (item.text.length > 600) ? item.text.slice(0, 600).concat("...") : item.text}}>
                 </p>
             </div> 
+        )
+    });
+
+    const suggestionsList = suggestions?.map(item => {
+        return (
+            <span key={item} style={{fontSize: 18}}>{item} </span>
         )
     });
 
@@ -79,18 +84,34 @@ function SearchPage() {
 
             {term && (
                 <div className="searchPage__results">
+                    <span style={{color: "red", fontSize: 20}}> { suggestions?.length > 0 ? "Did you mean:" : ""} </span>
+                    <span>{suggestionsList}</span>
                     <div className="searchPage__result_spellchecker">
-                        <p className='searchPage__resultCount'>
-                            page {pageNumber + 1} of {Math.ceil(data?.length/dataPerPage)}
-                        </p>
-                        <p style={{marginTop: 10}}>
-                            {data?.length} results for <b>{term}</b>
-                        </p>
+
+                        {data?.length > 0 ?
+
+                            <p className='searchPage__resultCount'>
+                                <p style={{color: "black", fontSize: 18}}>
+                                    page {pageNumber + 1} / {Math.ceil(data?.length / dataPerPage)} of {data?.length} results for <b>{term}</b>
+                                </p>
+                            </p> :
+
+                            <div>
+                                <span style={{width: "max-content"}}>No matched documents results for <b style={{fontSize: 30}}>{term}</b></span>
+                                <h3 style={{marginTop: 10}}>Suggestions</h3>
+                                <ul style={{width: "max-content"}}>
+                                    <li>Make sure that all words are spelled correctly</li>
+                                    <li>Try different keywords</li>
+                                    <li>Try more generic keywords</li>
+                                </ul>
+                            </div>
+                        }
                     </div>
 
-                    {displayData}
+                    <div style={{marginTop: 10}}>{displayData}</div>
 
-                    <ReactPaginate 
+                    {data?.length > 0 ?
+                    <ReactPaginate
                         previousLabel={"Previous"}
                         nextLabel={"Next"}
                         pageCount={pageCount}
@@ -99,9 +120,9 @@ function SearchPage() {
                         previousLinkClassName={"previousBttn"}
                         nextLinkClassName={"nextBttn"}
                         disabledClassName={"paginationDisabled"}
-                        activeClassName={"paginationActive"}
-                    />
-
+                        activeClassName={"paginationActive"}/>
+                        : ""
+                    }
                 </div>)}
         </div>
     )

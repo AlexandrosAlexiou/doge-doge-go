@@ -60,10 +60,12 @@ class SearchEngineApplicationTests {
     public void searchTest() throws IOException, InvalidTokenOffsetsException, ParseException {
         Searcher searcher = new Searcher();
         ArrayList<Article> results = searcher.search("Greece");
-        assertThat(results.get(0).getTitle()).isEqualTo("COVID-19 pandemic in Greece");
+        assertThat(results.get(0).getTitle()).contains("Greece");
+        assertThat(results.get(0).getText()).contains("Greece");
 
         results = searcher.search("India");
-        assertThat(results.get(0).getTitle()).isEqualTo("COVID-19 pandemic in India");
+        assertThat(results.get(0).getTitle()).contains("India");
+        assertThat(results.get(0).getText()).contains("India");
         searcher.close();
     }
 

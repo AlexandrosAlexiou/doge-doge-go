@@ -1,8 +1,5 @@
 package uoi.cs.searchengine.lucene;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import uoi.cs.searchengine.model.Article;
 import uoi.cs.searchengine.service.SearchService;
 import org.apache.lucene.store.Directory;
@@ -18,8 +15,12 @@ import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -33,10 +34,50 @@ public class Searcher implements SearchService {
   private final Logger logger = LoggerFactory.getLogger(Searcher.class);
 
   public Searcher() throws IOException {
+    createLuceneIndexIfNotExists();
     this.analyzer = new CustomAnalyzer();
     this.dir = FSDirectory.open(new File(Constants.INDEX_DIRECTORY_PATH).toPath());
     this.iReader = DirectoryReader.open(dir);
     this.iSearcher = new IndexSearcher(iReader);
+  }
+
+  private void createLuceneIndexIfNotExists() {
+    try {
+      File luceneIndexDirectory = new File(Constants.INDEX_DIRECTORY_PATH);
+      if (!luceneIndexDirectory.exists() && luceneIndexDirectory.mkdir()) {
+        logger.info(
+            String.format(
+                "Lucene Index Directory was not present and was created at %s",
+                new File(Constants.INDEX_DIRECTORY_PATH).getAbsolutePath()));
+        new IndexBuilder(Constants.INDEX_DIRECTORY_PATH).build(Constants.CORPUS_PATH);
+        logger.info(
+            String.format(
+                "Lucene Index was built at %s using %s",
+                new File(Constants.INDEX_DIRECTORY_PATH).getAbsolutePath(),
+                new File(Constants.CORPUS_PATH).getAbsolutePath()));
+        return;
+      }
+      if (!DirectoryReader.indexExists(
+          FSDirectory.open(Paths.get(Constants.INDEX_DIRECTORY_PATH)))) {
+        logger.info(
+            String.format(
+                "Lucene Index was not present at directory: %s",
+                new File(Constants.INDEX_DIRECTORY_PATH).getAbsolutePath()));
+        new IndexBuilder(Constants.INDEX_DIRECTORY_PATH).build(Constants.CORPUS_PATH);
+        logger.info(
+            String.format(
+                "Lucene Index was built at %s using %s for the corpus",
+                new File(Constants.INDEX_DIRECTORY_PATH).getAbsolutePath(),
+                new File(Constants.CORPUS_PATH).getAbsolutePath()));
+      } else {
+        logger.info(
+            String.format(
+                "Lucene Index is present at directory: %s",
+                new File(Constants.INDEX_DIRECTORY_PATH).getAbsolutePath()));
+      }
+    } catch (IOException exception) {
+      throw new RuntimeException(exception);
+    }
   }
 
   public List<Article> search(String q)

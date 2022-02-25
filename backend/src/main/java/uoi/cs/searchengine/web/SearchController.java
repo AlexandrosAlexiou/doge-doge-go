@@ -1,6 +1,5 @@
 package uoi.cs.searchengine.web;
 
-import org.apache.lucene.search.spell.SpellChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import uoi.cs.searchengine.lucene.SpellCheckerWrapper;
 import uoi.cs.searchengine.lucene.Searcher;
@@ -42,6 +41,7 @@ public class SearchController {
 
   @PreDestroy
   public void destroy() throws IOException {
-    this.searcher.close();
+    searcher.close();
+    spellCheckerWrapper.close();
   }
 }

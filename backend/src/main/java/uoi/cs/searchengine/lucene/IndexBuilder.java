@@ -47,8 +47,7 @@ public class IndexBuilder {
     urlFieldType.setTokenized(false);
     urlFieldType.freeze();
 
-    // This is the field setting for title text field (tokenized, searchable, store document
-    // vectors)
+    // This is the field setting for title text field (tokenized, searchable, store document vectors
     FieldType titleFieldType = new FieldType();
     titleFieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
     titleFieldType.setStoreTermVectors(true);

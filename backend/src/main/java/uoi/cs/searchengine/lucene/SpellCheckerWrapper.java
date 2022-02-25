@@ -41,16 +41,19 @@ public class SpellCheckerWrapper {
         new LuceneDictionary(iReader, Constants.TEXT), new IndexWriterConfig(analyzer), true);
 
     // Searching and presenting the suggested words by selecting a string distance
-    // checker.setStringDistance(new JaroWinklerDistance());
-    // checker.setStringDistance(new LevenshteinDistance());
-    // checker.setStringDistance(new LuceneLevenshteinDistance());
+    // spellChecker.setStringDistance(new JaroWinklerDistance());
+    // spellChecker.setStringDistance(new LevenshteinDistance());
+    // spellChecker.setStringDistance(new LuceneLevenshteinDistance());
     spellChecker.setStringDistance(new NGramDistance());
 
     String[] suggestions = spellChecker.suggestSimilar(input_word, 10);
 
+    return Arrays.asList(suggestions);
+  }
+
+  public void close() throws IOException {
     iReader.close();
     dir.close();
-    return Arrays.asList(suggestions);
   }
 
   public static void main(String[] args) throws Throwable {

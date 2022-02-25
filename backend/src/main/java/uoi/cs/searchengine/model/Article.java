@@ -1,35 +1,13 @@
 package uoi.cs.searchengine.model;
 
+import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@ToString
+@AllArgsConstructor
 public class Article {
-
-    private final String url;
-    private final String title;
-    private final String text;
-
-    public Article(String url, String title, String text) {
-        this.url = url;
-        this.title = title;
-        this.text = text;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "url='" + url + '\'' +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                '}';
-    }
+  @Getter private final String url;
+  @Getter private final String title;
+  @Getter private final String text;
 }

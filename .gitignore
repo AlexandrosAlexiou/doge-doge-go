@@ -2,7 +2,7 @@
 .DS_Store
 
 # Lucene Index
-backend/src/main/resources/Index/*
+backend/LuceneInvertedIndex/*
 !.gitkeep
 
 # ignore React static files
